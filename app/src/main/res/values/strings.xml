@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Contador de Estoque</string>
+
+    <string name="adicionar_btn">Adicionar Produto</string>
+    <string name="dados_produto_dialog_title">Dados do Produto</string>
+    <string name="nome_produto_hint">Nome do Produto</string>
+    <string name="qtd_produto_hint">Quantidade do Produto</string>
+
+    <string name="produto_ja_add_aviso">Produto já adicionado</string>
+
+    <string name="contagem_dialog_title">Contagem</string>
+    <string name="nome_produto_contado_label">Produto:</string>
+    <string name="qtd_produto_contado_label">Quantidade:</string>
+
+    <string name="remover_aviso_title">Remover Item Selecionado?</string>
+</resources>
