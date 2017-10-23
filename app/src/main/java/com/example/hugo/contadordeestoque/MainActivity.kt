@@ -30,8 +30,10 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.provider.MediaStore
+import android.support.design.widget.FloatingActionButton
 import android.support.v7.app.AppCompatActivity
 import android.text.InputType
+import android.view.Gravity
 import android.widget.*
 import com.google.android.gms.vision.Frame
 import org.jetbrains.anko.*
@@ -62,6 +64,7 @@ class MainActivity : AppCompatActivity() {
             } }
             verticalLayout {
                 //val inputLayout = TextInputLayout(ui.ctx)
+                val fab = FloatingActionButton(this@MainActivity)
                 listView {
                     adapter = adapterListaProdutos
                     onItemClick { _, view, _, _ ->
@@ -98,19 +101,33 @@ class MainActivity : AppCompatActivity() {
                 }.applyRecursively { view ->
                     view.layout(dip(5),dip(5),0,0)
                 }
-                button {
-                    textResource = R.string.adicionar_btn
-                    onClick {
-                        alert(R.string.dados_produto_dialog_title){
-                            customView {
-                                verticalLayout {
-                                    nomeProduto = autoCompleteTextView {
-                                        setAdapter(todosProdutos)
-                                        hintResource = R.string.nome_produto_hint
-                                    }
-                                    quantidade = editText{
-                                        inputType = InputType.TYPE_CLASS_NUMBER
-                                        hintResource = R.string.qtd_produto_hint
+                addView(fab)
+                val lp = LinearLayout.LayoutParams(dip(50), dip(50))
+                lp.gravity = Gravity.END
+                lp.topMargin = -dip(10)
+                lp.rightMargin = dip(10)
+                fab.layoutParams = lp
+                fab.scaleType = ImageView.ScaleType.CENTER
+                fab.image = getDrawable(R.drawable.ic_add_black_24dp)
+                fab.size = FloatingActionButton.SIZE_NORMAL
+                fab.onClick {
+                    alert(R.string.dados_produto_dialog_title){
+                        customView {
+                            verticalLayout {
+                                nomeProduto = autoCompleteTextView {
+                                    setAdapter(todosProdutos)
+                                    hintResource = R.string.nome_produto_hint
+                                }
+                                quantidade = editText{
+                                    inputType = InputType.TYPE_CLASS_NUMBER
+                                    hintResource = R.string.qtd_produto_hint
+                                }
+                                linearLayout {
+                                    orientation = LinearLayout.HORIZONTAL
+                                    textView {
+                                        textResource = R.string.tirar_foto_label
+                                    }.lparams {
+                                        gravity = Gravity.CENTER_VERTICAL
                                     }
                                     imageButton {
                                         imageResource = R.drawable.ic_camera_alt_black_24dp
@@ -134,24 +151,28 @@ class MainActivity : AppCompatActivity() {
                                                 }
                                             }.show()
                                         }
+                                    }.lparams{
+                                        setMargins(dip(60),0,0,0)
+                                        gravity = Gravity.END
                                     }
                                 }
+
                             }
-                            yesButton {
-                                if(adapterListaProdutos.getPosition(nomeProduto.text.toString()) == -1)
-                                {
-                                    adapterListaProdutos.add(nomeProduto.text.toString())
-                                    adapterListaProdutos.notifyDataSetChanged()
-                                    quantidadesProdutos.put(nomeProduto.text.toString(),quantidade.text.toString().toInt())
-                                }
-                                else
-                                {
-                                    toast(R.string.produto_ja_add_aviso)
-                                }
+                        }
+                        yesButton {
+                            if(adapterListaProdutos.getPosition(nomeProduto.text.toString()) == -1)
+                            {
+                                adapterListaProdutos.add(nomeProduto.text.toString())
+                                adapterListaProdutos.notifyDataSetChanged()
+                                quantidadesProdutos.put(nomeProduto.text.toString(),quantidade.text.toString().toInt())
                             }
-                            noButton {  }
-                        }.show()
-                    }
+                            else
+                            {
+                                toast(R.string.produto_ja_add_aviso)
+                            }
+                        }
+                        noButton {  }
+                    }.show()
                 }
             }
         }
@@ -172,7 +193,7 @@ class MainActivity : AppCompatActivity() {
                 }catch (e: ArrayIndexOutOfBoundsException)
                 {
                     e.printStackTrace()
-                    toast("QR não encontrado")
+                    toast(R.string.codigo_erro)
                 }
             }
         }

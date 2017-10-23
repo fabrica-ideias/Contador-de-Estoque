@@ -13,4 +13,7 @@
     <string name="qtd_produto_contado_label">Quantidade:</string>
 
     <string name="remover_aviso_title">Remover Item Selecionado?</string>
+
+    <string name="codigo_erro">Código não encotrado</string>
+    <string name="tirar_foto_label">Obter Produto pelo Código</string>
 </resources>
