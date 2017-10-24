@@ -34,6 +34,7 @@ import android.support.design.widget.FloatingActionButton
 import android.support.v7.app.AppCompatActivity
 import android.text.InputType
 import android.view.Gravity
+import android.view.View
 import android.widget.*
 import com.google.android.gms.vision.Frame
 import org.jetbrains.anko.*
@@ -50,9 +51,46 @@ class MainActivity : AppCompatActivity() {
     private val quantidadesProdutos = Hashtable<String,Int>()
     private lateinit var fotoTirada : ImageView
     private lateinit var textoCodigo : TextView
+    private lateinit var opcoesMenuAdapter : ArrayAdapter<String>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         PopularSQLite(this@MainActivity)
+        supportActionBar?.setDisplayShowCustomEnabled(true)
+        supportActionBar?.setCustomView(R.layout.custom_action_bar)
+        opcoesMenuAdapter = ArrayAdapter(this@MainActivity, R.layout.list_layout)
+        val menu = supportActionBar?.customView?.findViewById<View>(R.id.spinner) as Spinner
+        opcoesMenuAdapter.add("")
+        opcoesMenuAdapter.add("Finalizar")
+        menu.adapter = opcoesMenuAdapter
+        menu.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+
+            }
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                when(position)
+                {
+                    1->
+                    {
+                        alert(R.string.finalizar_aviso_title){
+                            customView {
+                                textView {
+                                    textResource = R.string.finalizar_aviso_msg
+                                }
+                            }
+                            yesButton {
+                                //finalizar
+                            }
+                            noButton {
+                                menu.setSelection(0)
+                            }
+                            onCancelled { menu.setSelection(0) }
+                        }.show()
+                    }
+                }
+            }
+
+        }
         adapterListaProdutos = ArrayAdapter(this@MainActivity, R.layout.list_layout)
         todosProdutos = ArrayAdapter(this@MainActivity, R.layout.list_layout)
         val sqlite = AcessoSQLite(this@MainActivity)
@@ -132,7 +170,7 @@ class MainActivity : AppCompatActivity() {
                                     imageButton {
                                         imageResource = R.drawable.ic_camera_alt_black_24dp
                                         onClick {
-                                            alert{
+                                            alert(R.string.codigo_foto){
                                                 customView {
                                                     verticalLayout {
                                                         val intentPicture = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
@@ -149,6 +187,7 @@ class MainActivity : AppCompatActivity() {
                                                         }
                                                     }
                                                 }
+                                                okButton {  }
                                             }.show()
                                         }
                                     }.lparams{

@@ -16,4 +16,8 @@
 
     <string name="codigo_erro">Código não encotrado</string>
     <string name="tirar_foto_label">Obter Produto pelo Código</string>
+    <string name="codigo_foto">Image do Código</string>
+
+    <string name="finalizar_aviso_title">Finalizar Contagem</string>
+    <string name="finalizar_aviso_msg">Deseja registrar a contagem?</string>
 </resources>
