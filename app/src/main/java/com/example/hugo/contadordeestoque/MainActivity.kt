@@ -238,9 +238,25 @@ class MainActivity : AppCompatActivity() {
                         yesButton {
                             if(adapterListaProdutos.getPosition(nomeProduto.text.toString()) == -1)
                             {
-                                adapterListaProdutos.add(nomeProduto.text.toString())
-                                adapterListaProdutos.notifyDataSetChanged()
-                                quantidadesProdutos.put(nomeProduto.text.toString(),quantidade.text.toString().toInt())
+                                if(todosProdutos.getPosition(nomeProduto.text.toString()) == -1)
+                                {
+                                    alert(R.string.prod_nao_cad_title)
+                                    {
+                                        messageResource = R.string.prod_nao_cad_msg
+                                        yesButton {
+                                            adapterListaProdutos.add(nomeProduto.text.toString())
+                                            adapterListaProdutos.notifyDataSetChanged()
+                                            quantidadesProdutos.put(nomeProduto.text.toString(),quantidade.text.toString().toInt())
+                                        }
+                                        noButton {  }
+                                    }.show()
+                                }
+                                else
+                                {
+                                    adapterListaProdutos.add(nomeProduto.text.toString())
+                                    adapterListaProdutos.notifyDataSetChanged()
+                                    quantidadesProdutos.put(nomeProduto.text.toString(),quantidade.text.toString().toInt())
+                                }
                             }
                             else
                             {

@@ -31,4 +31,7 @@
 
     <string name="con_err_aviso_title">Erro de Conexão</string>
     <string name="con_err_aviso">Houve um prolema com a comunicação com o servidor</string>
+
+    <string name="prod_nao_cad_title">Produto não Cadastrado</string>
+    <string name="prod_nao_cad_msg">Adicionar produto mesmo assim?</string>
 </resources>
