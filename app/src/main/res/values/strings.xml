@@ -28,4 +28,7 @@
 
     <string name="ip_server_hint">Servidor de Aplicação</string>
     <string name="salvar_cfg_btn">Salvar</string>
+
+    <string name="con_err_aviso_title">Erro de Conexão</string>
+    <string name="con_err_aviso">Houve um prolema com a comunicação com o servidor</string>
 </resources>

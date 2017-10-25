@@ -121,7 +121,6 @@ class MainActivity : AppCompatActivity() {
             }
             } }
             verticalLayout {
-                //val inputLayout = TextInputLayout(ui.ctx)
                 val fab = FloatingActionButton(this@MainActivity)
                 val imagemVazio = imageView {
                     imageResource = R.drawable.question_mark
@@ -221,13 +220,8 @@ class MainActivity : AppCompatActivity() {
                                                         {
                                                             startActivityForResult(intentPicture, 1)
                                                         }
-                                                        fotoTirada = imageView {
-
-                                                        }
-
-                                                        textoCodigo = textView {
-
-                                                        }
+                                                        fotoTirada = imageView {}
+                                                        textoCodigo = textView {}
                                                     }
                                                 }
                                                 okButton {  }
@@ -267,7 +261,6 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when
         {
@@ -290,7 +283,6 @@ class MainActivity : AppCompatActivity() {
         }
         super.onActivityResult(requestCode, resultCode, data)
     }
-
     override fun onResume() {
         menu.setSelection(0)
         super.onResume()
