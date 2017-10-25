@@ -1,11 +1,13 @@
 package com.example.hugo.contadordeestoque
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.util.Log
 import com.loopj.android.http.AsyncHttpClient
 import com.loopj.android.http.JsonHttpResponseHandler
 import cz.msebera.android.httpclient.Header
 import org.jetbrains.anko.db.insert
+import org.jetbrains.anko.defaultSharedPreferences
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -15,8 +17,10 @@ import org.json.JSONObject
 class PopularSQLite(private val c: Context) {
     private val http_client = AsyncHttpClient()
     private val sqlite = AcessoSQLite(c)
+    private var prefs : SharedPreferences
     init {
-        http_client.get("http://192.168.15.7:5000/produtos_estoque", object : JsonHttpResponseHandler(){
+        prefs = c.defaultSharedPreferences
+        http_client.get("http://${prefs.getString("ip_server","")}:5000/produtos_estoque", object : JsonHttpResponseHandler(){
             override fun onSuccess(statusCode: Int, headers: Array<Header>, response: JSONObject) {
                 Log.d("resposta","json object")
             }

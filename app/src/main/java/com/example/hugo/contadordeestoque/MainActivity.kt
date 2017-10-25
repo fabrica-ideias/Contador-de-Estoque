@@ -37,6 +37,9 @@ import android.view.Gravity
 import android.view.View
 import android.widget.*
 import com.google.android.gms.vision.Frame
+import com.loopj.android.http.AsyncHttpClient
+import com.loopj.android.http.JsonHttpResponseHandler
+import com.loopj.android.http.RequestParams
 import org.jetbrains.anko.*
 import org.jetbrains.anko.db.select
 import org.jetbrains.anko.sdk25.coroutines.onClick
@@ -52,14 +55,18 @@ class MainActivity : AppCompatActivity() {
     private lateinit var fotoTirada : ImageView
     private lateinit var textoCodigo : TextView
     private lateinit var opcoesMenuAdapter : ArrayAdapter<String>
+    private val client = AsyncHttpClient()
+    private lateinit var menu : Spinner
+    private lateinit var lista : ListView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         PopularSQLite(this@MainActivity)
         supportActionBar?.setDisplayShowCustomEnabled(true)
         supportActionBar?.setCustomView(R.layout.custom_action_bar)
         opcoesMenuAdapter = ArrayAdapter(this@MainActivity, R.layout.list_layout)
-        val menu = supportActionBar?.customView?.findViewById<View>(R.id.spinner) as Spinner
+        menu = supportActionBar?.customView?.findViewById<View>(R.id.spinner) as Spinner
         opcoesMenuAdapter.add("")
+        opcoesMenuAdapter.add("Configurações")
         opcoesMenuAdapter.add("Finalizar")
         menu.adapter = opcoesMenuAdapter
         menu.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
@@ -72,14 +79,27 @@ class MainActivity : AppCompatActivity() {
                 {
                     1->
                     {
+                        val intent = Intent(this@MainActivity, ConfigActivity::class.java)
+                        startActivity(intent)
+                    }
+                    2->
+                    {
                         alert(R.string.finalizar_aviso_title){
                             customView {
-                                textView {
-                                    textResource = R.string.finalizar_aviso_msg
+                                verticalLayout {
+                                    textView {
+                                        textResource = R.string.finalizar_aviso_msg
+                                    }.lparams{
+                                        marginStart = dip(25)
+                                    }
                                 }
                             }
                             yesButton {
                                 //finalizar
+                                val params = RequestParams()
+                                client.post("http://",params,object: JsonHttpResponseHandler(){
+
+                                })
                             }
                             noButton {
                                 menu.setSelection(0)
@@ -103,8 +123,20 @@ class MainActivity : AppCompatActivity() {
             verticalLayout {
                 //val inputLayout = TextInputLayout(ui.ctx)
                 val fab = FloatingActionButton(this@MainActivity)
-                listView {
+                val imagemVazio = imageView {
+                    imageResource = R.drawable.question_mark
+                }
+                val texto_vazio1 = textView {
+                    textResource = R.string.lista_vazio
+                    gravity = Gravity.CENTER_HORIZONTAL
+                }
+                val texto_vazio2 = textView {
+                    textResource = R.string.lista_vazio_msg
+                    gravity = Gravity.CENTER_HORIZONTAL
+                }
+                lista = listView {
                     adapter = adapterListaProdutos
+                    visibility = View.GONE
                     onItemClick { _, view, _, _ ->
                         view as TextView
                         alert(R.string.contagem_dialog_title) {
@@ -131,6 +163,17 @@ class MainActivity : AppCompatActivity() {
                                 }
                             }
                             okButton {  }
+                            negativeButton(R.string.del_btn){
+                                alert(R.string.remover_aviso_title) {
+                                    messageResource = R.string.remover_aviso_msg
+                                    yesButton {
+                                        adapterListaProdutos.remove(view.text.toString())
+                                        adapterListaProdutos.notifyDataSetChanged()
+                                        quantidadesProdutos.remove(view.text.toString())
+                                    }
+                                    noButton {  }
+                                }.show()
+                            }
                         }.show()
                     }
                 }.lparams {
@@ -142,7 +185,7 @@ class MainActivity : AppCompatActivity() {
                 addView(fab)
                 val lp = LinearLayout.LayoutParams(dip(50), dip(50))
                 lp.gravity = Gravity.END
-                lp.topMargin = -dip(10)
+                lp.topMargin = -dip(10) + dip(200)
                 lp.rightMargin = dip(10)
                 fab.layoutParams = lp
                 fab.scaleType = ImageView.ScaleType.CENTER
@@ -209,6 +252,15 @@ class MainActivity : AppCompatActivity() {
                             {
                                 toast(R.string.produto_ja_add_aviso)
                             }
+                            if(lista.visibility == View.GONE)
+                            {
+                                lista.visibility = View.VISIBLE
+                                imagemVazio.visibility = View.GONE
+                                texto_vazio1.visibility = View.GONE
+                                texto_vazio2.visibility = View.GONE
+                                lp.topMargin = -dip(10)
+                                fab.layoutParams = lp
+                            }
                         }
                         noButton {  }
                     }.show()
@@ -237,5 +289,10 @@ class MainActivity : AppCompatActivity() {
             }
         }
         super.onActivityResult(requestCode, resultCode, data)
+    }
+
+    override fun onResume() {
+        menu.setSelection(0)
+        super.onResume()
     }
 }

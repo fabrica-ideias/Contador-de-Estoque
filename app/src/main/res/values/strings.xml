@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">Contador de Estoque</string>
 
+    <string name="lista_vazio">Parece que você não adicionou nada ainda</string>
+    <string name="lista_vazio_msg">Para adicionar alguma coisa pressione o botão "+"</string>
+
     <string name="adicionar_btn">Adicionar Produto</string>
     <string name="dados_produto_dialog_title">Dados do Produto</string>
     <string name="nome_produto_hint">Nome do Produto</string>
@@ -11,8 +14,10 @@
     <string name="contagem_dialog_title">Contagem</string>
     <string name="nome_produto_contado_label">Produto:</string>
     <string name="qtd_produto_contado_label">Quantidade:</string>
+    <string name="del_btn">Excluir</string>
 
     <string name="remover_aviso_title">Remover Item Selecionado?</string>
+    <string name="remover_aviso_msg">Essa ação não poderá ser desfeita!</string>
 
     <string name="codigo_erro">Código não encotrado</string>
     <string name="tirar_foto_label">Obter Produto pelo Código</string>
@@ -20,4 +25,7 @@
 
     <string name="finalizar_aviso_title">Finalizar Contagem</string>
     <string name="finalizar_aviso_msg">Deseja registrar a contagem?</string>
+
+    <string name="ip_server_hint">Servidor de Aplicação</string>
+    <string name="salvar_cfg_btn">Salvar</string>
 </resources>
