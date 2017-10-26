@@ -34,12 +34,14 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
+import com.example.hugo.lessapedidos.GetScreenMetrics
 import com.google.android.gms.vision.Frame
 import com.loopj.android.http.AsyncHttpClient
 import com.loopj.android.http.JsonHttpResponseHandler
 import com.loopj.android.http.RequestParams
 import org.jetbrains.anko.*
 import org.jetbrains.anko.db.select
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
     private lateinit var opcoesMenuAdapter : ArrayAdapter<String>
@@ -48,31 +50,35 @@ class MainActivity : AppCompatActivity() {
     private lateinit var ui : MainActivityUI
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        PopularSQLite(this@MainActivity)
         ui = MainActivityUI()
         ui.setContentView(this)
-        val sqlite = AcessoSQLite(this@MainActivity)
-        sqlite.use { select("produtos").exec {
-            val listaProdutos = ArrayList<String>()
-            while(this.moveToNext())
-            {
-                listaProdutos.add(this.getString(1))
-            }
-            ui.setTodosProdutos(listaProdutos)
-        } }
+        val sincronizar = {
+            PopularSQLite(this@MainActivity)
+            val sqlite = AcessoSQLite(this@MainActivity)
+            sqlite.use { select("produtos").exec {
+                val listaProdutos = ArrayList<String>()
+                val produtos_unidades = Hashtable<String,String>()
+                while(this.moveToNext())
+                {
+                    listaProdutos.add(this.getString(1))
+                    produtos_unidades.put(this.getString(1), this.getString(3))
+                }
+                ui.setTodosProdutos(listaProdutos)
+                ui.setProdutosUnidades(produtos_unidades)
+            } }
+        }
+        sincronizar()
         supportActionBar?.setDisplayShowCustomEnabled(true)
         supportActionBar?.setCustomView(R.layout.custom_action_bar)
         opcoesMenuAdapter = ArrayAdapter(this@MainActivity, R.layout.list_layout)
         menu = supportActionBar?.customView?.findViewById<View>(R.id.spinner) as Spinner
         opcoesMenuAdapter.add("")
         opcoesMenuAdapter.add("Configurações")
+        opcoesMenuAdapter.add("Sincronizar")
         opcoesMenuAdapter.add("Finalizar")
         menu.adapter = opcoesMenuAdapter
         menu.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-
-            }
-
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 when(position)
                 {
@@ -83,18 +89,22 @@ class MainActivity : AppCompatActivity() {
                     }
                     2->
                     {
+                        sincronizar()
+                    }
+                    3->
+                    {
                         alert(R.string.finalizar_aviso_title){
                             customView {
                                 verticalLayout {
                                     textView {
                                         textResource = R.string.finalizar_aviso_msg
+                                        textSize = GetScreenMetrics(resources.displayMetrics.density).getFontSizeDialogText()
                                     }.lparams{
                                         marginStart = dip(25)
                                     }
                                 }
                             }
                             yesButton {
-                                //finalizar
                                 val params = RequestParams()
                                 client.post("http://",params,object: JsonHttpResponseHandler(){
 

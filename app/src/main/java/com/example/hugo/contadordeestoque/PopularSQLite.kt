@@ -2,7 +2,6 @@ package com.example.hugo.contadordeestoque
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.util.Log
 import com.loopj.android.http.AsyncHttpClient
 import com.loopj.android.http.JsonHttpResponseHandler
 import cz.msebera.android.httpclient.Header
@@ -20,7 +19,9 @@ class PopularSQLite(private val c: Context) {
     private var prefs : SharedPreferences = c.defaultSharedPreferences
     init {
         httpClient.get("http://${prefs.getString("ip_server","")}:${prefs.getString("porta_server","")}/produtos_estoque", object : JsonHttpResponseHandler(){
-            val dialog = c.progressDialog("Aguarde") {}
+            val dialog = c.progressDialog(R.string.aguarde_title) {
+                setMessage(c.getString(R.string.aguarde_msg))
+            }
             val mostrarMensagemErro = {
                 dialog.dismiss()
                 c.alert{
@@ -39,7 +40,6 @@ class PopularSQLite(private val c: Context) {
                 super.onProgress(bytesWritten, totalSize)
             }
             override fun onSuccess(statusCode: Int, headers: Array<Header>, response: JSONObject) {
-                Log.d("resposta","json object")
                 dialog.dismiss()
             }
 
@@ -55,7 +55,8 @@ class PopularSQLite(private val c: Context) {
                         val codigo = timeline.getJSONObject(i).getString("PRO_PKN_CODIGO")[0].toInt()
                         val nome = timeline.getJSONObject(i).getString("PRO_A_DESCRICAO_REDUZIDA")
                         val quantidade = timeline.getJSONObject(i).getDouble("EST_N_FISCAL_SALDO_01")
-                        sqlite.use { insert("produtos", "id" to codigo, "nome" to nome, "qtd" to quantidade) }
+                        val unidade = timeline.getJSONObject(i).getString("PRO_A_UNIDADE")
+                        sqlite.use { insert("produtos", "id" to codigo, "nome" to nome, "qtd" to quantidade, "und" to unidade) }
                     }
                 }
                 dbdialog.dismiss()

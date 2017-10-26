@@ -14,6 +14,8 @@
     <string name="contagem_dialog_title">Contagem</string>
     <string name="nome_produto_contado_label">Produto:</string>
     <string name="qtd_produto_contado_label">Quantidade:</string>
+    <string name="und_prod">Unidade:</string>
+    <string name="und_valor_padrao">Indefinido</string>
     <string name="del_btn">Excluir</string>
 
     <string name="remover_aviso_title">Remover Item Selecionado?</string>

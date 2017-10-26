@@ -12,6 +12,7 @@ import android.widget.*
 import com.example.hugo.lessapedidos.GetScreenMetrics
 import org.jetbrains.anko.*
 import org.jetbrains.anko.sdk25.coroutines.onClick
+import org.jetbrains.anko.sdk25.coroutines.onFocusChange
 import org.jetbrains.anko.sdk25.coroutines.onItemClick
 import java.util.*
 
@@ -22,12 +23,13 @@ class MainActivityUI : AnkoComponent<MainActivity> {
     private lateinit var nomeProduto : AutoCompleteTextView
     private lateinit var quantidade : EditText
     private val quantidadesProdutos = Hashtable<String,Int>()
+    private var unidadesProdutos = Hashtable<String,String>()
     private lateinit var adapterListaProdutos : ArrayAdapter<String>
     private lateinit var lista : ListView
     private lateinit var fotoTirada : ImageView
     private lateinit var textoCodigo : TextView
     private lateinit var todosProdutos : ArrayAdapter<String>
-
+    private lateinit var unidade : TextView
     val setFotoTirada = { bitmap : Bitmap ->
         fotoTirada.imageBitmap = bitmap
     }
@@ -38,6 +40,10 @@ class MainActivityUI : AnkoComponent<MainActivity> {
     val setTodosProdutos = { lista : ArrayList<String>->
         todosProdutos.addAll(lista)
         todosProdutos.notifyDataSetChanged()
+    }
+
+    val setProdutosUnidades = { unidades: Hashtable<String,String> ->
+        this.unidadesProdutos = unidades
     }
     override fun createView(ui: AnkoContext<MainActivity>) = ui.apply {
         adapterListaProdutos = ArrayAdapter(ui.ctx, R.layout.list_layout)
@@ -125,6 +131,12 @@ class MainActivityUI : AnkoComponent<MainActivity> {
                             nomeProduto = autoCompleteTextView {
                                 setAdapter(todosProdutos)
                                 hintResource = R.string.nome_produto_hint
+                                onFocusChange { v, hasFocus ->
+                                    if(!hasFocus)
+                                    {
+                                        unidade.text = unidadesProdutos[text.toString()]
+                                    }
+                                }
                             }
                             quantidade = editText{
                                 inputType = InputType.TYPE_CLASS_NUMBER
@@ -133,7 +145,19 @@ class MainActivityUI : AnkoComponent<MainActivity> {
                             linearLayout {
                                 orientation = LinearLayout.HORIZONTAL
                                 textView {
+                                    textResource = R.string.und_prod
+                                    textSize = GetScreenMetrics(resources.displayMetrics.density).getFontSizeDialogText()
+                                }
+                                unidade = textView {
+                                    textSize = GetScreenMetrics(resources.displayMetrics.density).getFontSizeDialogText()
+                                    textResource = R.string.und_valor_padrao
+                                }
+                            }
+                            linearLayout {
+                                orientation = LinearLayout.HORIZONTAL
+                                textView {
                                     textResource = R.string.tirar_foto_label
+                                    textSize = GetScreenMetrics(resources.displayMetrics.density).getFontSizeDialogText()
                                 }.lparams {
                                     gravity = Gravity.CENTER_VERTICAL
                                 }
@@ -149,7 +173,9 @@ class MainActivityUI : AnkoComponent<MainActivity> {
                                                         startActivityForResult(ui.owner, intentPicture, 1, null)
                                                     }
                                                     fotoTirada = imageView {}
-                                                    textoCodigo = textView {}
+                                                    textoCodigo = textView {
+                                                        textSize = GetScreenMetrics(resources.displayMetrics.density).getFontSizeDialogText()
+                                                    }
                                                 }
                                             }
                                             okButton {  }

@@ -11,6 +11,7 @@ class AcessoSQLite(c: Context): ManagedSQLiteOpenHelper(c, "Estoque") {
     private val ID = "id"
     private val NOME = "nome"
     private val QUANTIDADE = "qtd"
+    private val UNIDADE = "und"
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
         db?.dropTable("produtos")
     }
@@ -21,7 +22,8 @@ class AcessoSQLite(c: Context): ManagedSQLiteOpenHelper(c, "Estoque") {
                 true,
                 ID to INTEGER,
                 NOME to TEXT,
-                QUANTIDADE to TEXT
+                QUANTIDADE to TEXT,
+                UNIDADE to TEXT
         )
     }
 }
