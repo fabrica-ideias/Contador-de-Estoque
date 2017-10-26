@@ -1,7 +1,5 @@
 package com.example.hugo.lessapedidos
 
-import android.util.Log
-
 /**
 * Created by hugo on 05/10/17.
 */
@@ -71,32 +69,31 @@ class GetScreenMetrics(private val metrics: Float) {
     }
 
     val getLogoSize = {
-        Log.d("metrics", metrics.toString())
         when(metrics)
         {
             0.75f->  //ldpi
             {
-                38
+                127
             }
             1f->    //mdpi
             {
-                75
+                169
             }
             1.5f->  //hdpi
             {
-                150
+                225
             }
             2f->    //xhdpi
             {
-                225
+                282
             }
             3f->    //xxhdpi
             {
-                338
+                352
             }
             4f->    //xxxhdpi
             {
-                507
+                440
             }
             else->
                 0

@@ -139,4 +139,15 @@ class MainActivity : AppCompatActivity() {
         menu.setSelection(0)
         super.onResume()
     }
+
+    override fun onBackPressed() {
+        alert{
+            titleResource = R.string.confirm_sair_title
+            messageResource = R.string.confirm_sair_msg
+            yesButton {
+                super.onBackPressed()
+            }
+            noButton {  }
+        }.show()
+    }
 }

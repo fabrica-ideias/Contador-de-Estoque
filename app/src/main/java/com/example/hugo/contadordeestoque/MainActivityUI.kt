@@ -9,6 +9,7 @@ import android.text.InputType
 import android.view.Gravity
 import android.view.View
 import android.widget.*
+import com.example.hugo.lessapedidos.GetScreenMetrics
 import org.jetbrains.anko.*
 import org.jetbrains.anko.sdk25.coroutines.onClick
 import org.jetbrains.anko.sdk25.coroutines.onItemClick
@@ -36,6 +37,7 @@ class MainActivityUI : AnkoComponent<MainActivity> {
     }
     val setTodosProdutos = { lista : ArrayList<String>->
         todosProdutos.addAll(lista)
+        todosProdutos.notifyDataSetChanged()
     }
     override fun createView(ui: AnkoContext<MainActivity>) = ui.apply {
         adapterListaProdutos = ArrayAdapter(ui.ctx, R.layout.list_layout)
@@ -44,14 +46,20 @@ class MainActivityUI : AnkoComponent<MainActivity> {
             val fab = FloatingActionButton(ui.ctx)
             val imagemVazio = imageView {
                 imageResource = R.drawable.question_mark
+            }.lparams {
+                width = GetScreenMetrics(resources.displayMetrics.density).getLogoSize()
+                height = GetScreenMetrics(resources.displayMetrics.density).getLogoSize()
+                gravity = Gravity.CENTER_HORIZONTAL
             }
             val textoVazio1 = textView {
                 textResource = R.string.lista_vazio
                 gravity = Gravity.CENTER_HORIZONTAL
+                textSize = GetScreenMetrics(resources.displayMetrics.density).getFontSizeDialogText()
             }
             val textoVazio2 = textView {
                 textResource = R.string.lista_vazio_msg
                 gravity = Gravity.CENTER_HORIZONTAL
+                textSize = GetScreenMetrics(resources.displayMetrics.density).getFontSizeDialogText()
             }
             lista = listView {
                 adapter = adapterListaProdutos

@@ -35,4 +35,10 @@
 
     <string name="prod_nao_cad_title">Produto não Cadastrado</string>
     <string name="prod_nao_cad_msg">Adicionar produto mesmo assim?</string>
+
+    <string name="confirm_sair_title">Deseja sair?</string>
+    <string name="confirm_sair_msg">Toda informação dessa lista será perdida!</string>
+
+    <string name="aguarde_title">Aguarde</string>
+    <string name="aguarde_msg">Populando Banco Interno</string>
 </resources>

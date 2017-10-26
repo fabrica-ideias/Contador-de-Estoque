@@ -19,8 +19,16 @@ class PopularSQLite(private val c: Context) {
     private val sqlite = AcessoSQLite(c)
     private var prefs : SharedPreferences = c.defaultSharedPreferences
     init {
-        httpClient.get("http://${prefs.getString("ip_server","")}:5000/produtos_estoque", object : JsonHttpResponseHandler(){
+        httpClient.get("http://${prefs.getString("ip_server","")}:${prefs.getString("porta_server","")}/produtos_estoque", object : JsonHttpResponseHandler(){
             val dialog = c.progressDialog("Aguarde") {}
+            val mostrarMensagemErro = {
+                dialog.dismiss()
+                c.alert{
+                    titleResource = R.string.con_err_aviso_title
+                    messageResource = R.string.con_err_aviso
+                    okButton {  }
+                }.show()
+            }
             override fun onStart() {
                 dialog.show()
                 super.onStart()
@@ -37,8 +45,8 @@ class PopularSQLite(private val c: Context) {
 
             override fun onSuccess(statusCode: Int, headers: Array<Header>, timeline: JSONArray) {
                 dialog.dismiss()
-                val dbdialog = c.indeterminateProgressDialog("Aguarde") {
-                    setMessage("Populando Banco Interno")
+                val dbdialog = c.indeterminateProgressDialog(R.string.aguarde_title) {
+                    setMessage(c.getString(R.string.aguarde_msg))
                 }
                 dbdialog.show()
                 doAsync {
@@ -54,29 +62,17 @@ class PopularSQLite(private val c: Context) {
             }
 
             override fun onFailure(statusCode: Int, headers: Array<out Header>?, throwable: Throwable?, errorResponse: JSONObject?) {
-                dialog.dismiss()
-                c.alert(R.string.con_err_aviso_title) {
-                    messageResource = R.string.con_err_aviso
-                    okButton {  }
-                }.show()
+                mostrarMensagemErro()
                 super.onFailure(statusCode, headers, throwable, errorResponse)
             }
 
             override fun onFailure(statusCode: Int, headers: Array<out Header>?, throwable: Throwable?, errorResponse: JSONArray?) {
-                dialog.dismiss()
-                c.alert(R.string.con_err_aviso_title) {
-                    messageResource = R.string.con_err_aviso
-                    okButton {  }
-                }.show()
+                mostrarMensagemErro()
                 super.onFailure(statusCode, headers, throwable, errorResponse)
             }
 
             override fun onFailure(statusCode: Int, headers: Array<out Header>?, responseString: String?, throwable: Throwable?) {
-                dialog.dismiss()
-                c.alert(R.string.con_err_aviso_title) {
-                    messageResource = R.string.con_err_aviso
-                    okButton {  }
-                }.show()
+                mostrarMensagemErro()
                 super.onFailure(statusCode, headers, responseString, throwable)
             }
         })
