@@ -61,6 +61,24 @@ class PopularSQLite(private val c: Context) {
                 }.show()
                 super.onFailure(statusCode, headers, throwable, errorResponse)
             }
+
+            override fun onFailure(statusCode: Int, headers: Array<out Header>?, throwable: Throwable?, errorResponse: JSONArray?) {
+                dialog.dismiss()
+                c.alert(R.string.con_err_aviso_title) {
+                    messageResource = R.string.con_err_aviso
+                    okButton {  }
+                }.show()
+                super.onFailure(statusCode, headers, throwable, errorResponse)
+            }
+
+            override fun onFailure(statusCode: Int, headers: Array<out Header>?, responseString: String?, throwable: Throwable?) {
+                dialog.dismiss()
+                c.alert(R.string.con_err_aviso_title) {
+                    messageResource = R.string.con_err_aviso
+                    okButton {  }
+                }.show()
+                super.onFailure(statusCode, headers, responseString, throwable)
+            }
         })
     }
 }
