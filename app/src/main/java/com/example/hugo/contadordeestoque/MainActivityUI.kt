@@ -10,7 +10,6 @@ import android.view.Gravity
 import android.view.View
 import android.widget.*
 import org.jetbrains.anko.*
-import org.jetbrains.anko.db.select
 import org.jetbrains.anko.sdk25.coroutines.onClick
 import org.jetbrains.anko.sdk25.coroutines.onItemClick
 import java.util.*
@@ -35,26 +34,22 @@ class MainActivityUI : AnkoComponent<MainActivity> {
     val setValorDecodificado = { valor: String ->
         textoCodigo.text = valor
     }
+    val setTodosProdutos = { lista : ArrayList<String>->
+        todosProdutos.addAll(lista)
+    }
     override fun createView(ui: AnkoContext<MainActivity>) = ui.apply {
         adapterListaProdutos = ArrayAdapter(ui.ctx, R.layout.list_layout)
         todosProdutos = ArrayAdapter(ui.ctx, R.layout.list_layout)
-        val sqlite = AcessoSQLite(ui.ctx)
-        sqlite.use { select("produtos").exec {
-            while(this.moveToNext())
-            {
-                todosProdutos.add(this.getString(1))
-            }
-        } }
         verticalLayout {
             val fab = FloatingActionButton(ui.ctx)
             val imagemVazio = imageView {
                 imageResource = R.drawable.question_mark
             }
-            val texto_vazio1 = textView {
+            val textoVazio1 = textView {
                 textResource = R.string.lista_vazio
                 gravity = Gravity.CENTER_HORIZONTAL
             }
-            val texto_vazio2 = textView {
+            val textoVazio2 = textView {
                 textResource = R.string.lista_vazio_msg
                 gravity = Gravity.CENTER_HORIZONTAL
             }
@@ -143,7 +138,7 @@ class MainActivityUI : AnkoComponent<MainActivity> {
                                                     val intentPicture = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
                                                     if(intentPicture.resolveActivity(ui.ctx.packageManager)!= null)
                                                     {
-                                                        startActivityForResult(MainActivity(), intentPicture, 1, null)
+                                                        startActivityForResult(ui.owner, intentPicture, 1, null)
                                                     }
                                                     fotoTirada = imageView {}
                                                     textoCodigo = textView {}
@@ -191,8 +186,8 @@ class MainActivityUI : AnkoComponent<MainActivity> {
                         {
                             lista.visibility = View.VISIBLE
                             imagemVazio.visibility = View.GONE
-                            texto_vazio1.visibility = View.GONE
-                            texto_vazio2.visibility = View.GONE
+                            textoVazio1.visibility = View.GONE
+                            textoVazio2.visibility = View.GONE
                             lp.topMargin = -dip(10)
                             fab.layoutParams = lp
                         }

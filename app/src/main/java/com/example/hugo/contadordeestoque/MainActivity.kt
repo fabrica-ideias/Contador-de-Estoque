@@ -39,6 +39,7 @@ import com.loopj.android.http.AsyncHttpClient
 import com.loopj.android.http.JsonHttpResponseHandler
 import com.loopj.android.http.RequestParams
 import org.jetbrains.anko.*
+import org.jetbrains.anko.db.select
 
 class MainActivity : AppCompatActivity() {
     private lateinit var opcoesMenuAdapter : ArrayAdapter<String>
@@ -50,6 +51,15 @@ class MainActivity : AppCompatActivity() {
         PopularSQLite(this@MainActivity)
         ui = MainActivityUI()
         ui.setContentView(this)
+        val sqlite = AcessoSQLite(this@MainActivity)
+        sqlite.use { select("produtos").exec {
+            val listaProdutos = ArrayList<String>()
+            while(this.moveToNext())
+            {
+                listaProdutos.add(this.getString(1))
+            }
+            ui.setTodosProdutos(listaProdutos)
+        } }
         supportActionBar?.setDisplayShowCustomEnabled(true)
         supportActionBar?.setCustomView(R.layout.custom_action_bar)
         opcoesMenuAdapter = ArrayAdapter(this@MainActivity, R.layout.list_layout)
