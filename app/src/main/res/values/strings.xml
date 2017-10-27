@@ -43,4 +43,7 @@
 
     <string name="aguarde_title">Aguarde</string>
     <string name="aguarde_msg">Populando Banco Interno</string>
+
+    <string name="conf_alerta">É necessário definir configurações</string>
+    <string name="conf_alerta_msg">Você será redirecionado agora</string>
 </resources>

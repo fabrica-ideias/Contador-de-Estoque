@@ -27,6 +27,7 @@ package com.example.hugo.contadordeestoque
 
 import android.app.Activity
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -48,6 +49,7 @@ class MainActivity : AppCompatActivity() {
     private val client = AsyncHttpClient()
     private lateinit var menu : Spinner
     private lateinit var ui : MainActivityUI
+    private lateinit var prefs : SharedPreferences
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         ui = MainActivityUI()
@@ -67,7 +69,20 @@ class MainActivity : AppCompatActivity() {
                 ui.setProdutosUnidades(produtos_unidades)
             } }
         }
-        sincronizar()
+        prefs = defaultSharedPreferences
+        if(prefs.getString("ip_server","") == "")
+        {
+            alert {
+                titleResource = R.string.conf_alerta
+                messageResource = R.string.conf_alerta_msg
+                okButton {
+                    val intent = Intent(this@MainActivity, ConfigActivity::class.java)
+                    startActivity(intent)
+                }
+            }.show()
+        }
+        else
+            sincronizar()
         supportActionBar?.setDisplayShowCustomEnabled(true)
         supportActionBar?.setCustomView(R.layout.custom_action_bar)
         opcoesMenuAdapter = ArrayAdapter(this@MainActivity, R.layout.list_layout)
