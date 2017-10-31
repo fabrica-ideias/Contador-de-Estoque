@@ -121,7 +121,7 @@ class MainActivity : AppCompatActivity() {
                             }
                             yesButton {
                                 val params = RequestParams()
-                                client.post("http://",params,object: JsonHttpResponseHandler(){
+                                client.post("http://${prefs.getString("ip_server","")}/contabilizar",params,object: JsonHttpResponseHandler(){
 
                                 })
                             }

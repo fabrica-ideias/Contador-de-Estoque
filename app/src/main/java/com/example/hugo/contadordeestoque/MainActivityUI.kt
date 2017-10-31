@@ -108,6 +108,11 @@ class MainActivityUI : AnkoComponent<MainActivity> {
         }
         lp
     }
+    private val adicionarProdutoLista = { nome:String, quantidade: Int ->
+        adapterListaProdutos.add(nome)
+        adapterListaProdutos.notifyDataSetChanged()
+        quantidadesProdutos.put(nome,quantidade)
+    }
     override fun createView(ui: AnkoContext<MainActivity>) = ui.apply {
         adapterListaProdutos = ArrayAdapter(ui.ctx, R.layout.list_layout)
         todosProdutos = ArrayAdapter(ui.ctx, R.layout.list_layout)
@@ -166,6 +171,12 @@ class MainActivityUI : AnkoComponent<MainActivity> {
                                     adapterListaProdutos.remove(view.text.toString())
                                     adapterListaProdutos.notifyDataSetChanged()
                                     quantidadesProdutos.remove(view.text.toString())
+                                    imagemVazio.visibility = View.VISIBLE
+                                    textoVazio1.visibility = View.VISIBLE
+                                    textoVazio2.visibility = View.VISIBLE
+                                    val auxlp = fab.layoutParams as LinearLayout.LayoutParams
+                                    auxlp.topMargin = -dip(200)
+                                    fab.layoutParams = auxlp
                                 }
                                 noButton {  }
                             }.show()
@@ -179,7 +190,6 @@ class MainActivityUI : AnkoComponent<MainActivity> {
                 view.layout(dip(5),dip(5),0,0)
             }
             addView(fab)
-            val lp = LinearLayout.LayoutParams(dip(50), dip(50))
             val fablp = posicionarFab(resources.displayMetrics.density,ui.ctx)
             fab.layoutParams = fablp
             fab.scaleType = ImageView.ScaleType.CENTER
@@ -247,7 +257,6 @@ class MainActivityUI : AnkoComponent<MainActivity> {
                                     gravity = Gravity.END
                                 }
                             }
-
                         }
                     }
                     yesButton {
@@ -259,18 +268,14 @@ class MainActivityUI : AnkoComponent<MainActivity> {
                                 {
                                     messageResource = R.string.prod_nao_cad_msg
                                     yesButton {
-                                        adapterListaProdutos.add(nomeProduto.text.toString())
-                                        adapterListaProdutos.notifyDataSetChanged()
-                                        quantidadesProdutos.put(nomeProduto.text.toString(),quantidade.text.toString().toInt())
+                                        adicionarProdutoLista(nomeProduto.text.toString(), quantidade.text.toString().toInt())
                                     }
                                     noButton {  }
                                 }.show()
                             }
                             else
                             {
-                                adapterListaProdutos.add(nomeProduto.text.toString())
-                                adapterListaProdutos.notifyDataSetChanged()
-                                quantidadesProdutos.put(nomeProduto.text.toString(),quantidade.text.toString().toInt())
+                                adicionarProdutoLista(nomeProduto.text.toString(), quantidade.text.toString().toInt())
                             }
                         }
                         else
