@@ -59,14 +59,14 @@ class MainActivity : AppCompatActivity() {
             val sqlite = AcessoSQLite(this@MainActivity)
             sqlite.use { select("produtos").exec {
                 val listaProdutos = ArrayList<String>()
-                val produtos_unidades = Hashtable<String,String>()
+                val produtosUnidades = Hashtable<String,String>()
                 while(this.moveToNext())
                 {
                     listaProdutos.add(this.getString(1))
-                    produtos_unidades.put(this.getString(1), this.getString(3))
+                    produtosUnidades.put(this.getString(1), this.getString(3))
                 }
                 ui.setTodosProdutos(listaProdutos)
-                ui.setProdutosUnidades(produtos_unidades)
+                ui.setProdutosUnidades(produtosUnidades)
             } }
         }
         prefs = defaultSharedPreferences

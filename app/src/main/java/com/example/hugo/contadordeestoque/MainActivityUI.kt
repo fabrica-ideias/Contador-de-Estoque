@@ -1,11 +1,14 @@
 package com.example.hugo.contadordeestoque
 
+import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.provider.MediaStore
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.ActivityCompat.startActivityForResult
 import android.text.InputType
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.widget.*
@@ -44,6 +47,66 @@ class MainActivityUI : AnkoComponent<MainActivity> {
 
     val setProdutosUnidades = { unidades: Hashtable<String,String> ->
         this.unidadesProdutos = unidades
+    }
+
+    private val posicionarFab = { screenMetrics : Float, context: Context ->
+        val lp = LinearLayout.LayoutParams(context.dip(50), context.dip(50))
+        lp.gravity = Gravity.END
+        Log.d("metrics", screenMetrics.toString())
+        when(screenMetrics)
+        {
+            0.75f->  //ldpi
+            {
+
+            }
+            1f->    //mdpi
+            {
+
+            }
+            1.5f->  //hdpi
+            {
+                val screenSize = context.resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK
+                Log.d("screen size", screenSize.toString())
+                when(screenSize)
+                {
+                    Configuration.SCREENLAYOUT_SIZE_NORMAL->
+                    {
+                        Log.d("tamanho", "normal")
+                        lp.topMargin = -context.dip(10) + context.dip(200)
+                        lp.rightMargin = context.dip(10)
+                    }
+                    Configuration.SCREENLAYOUT_SIZE_LARGE ->
+                    {
+                        Log.d("tamanho", "grande")
+                        lp.topMargin = -context.dip(10) + context.dip(200)
+                        lp.rightMargin = context.dip(10)
+                    }
+                    Configuration.SCREENLAYOUT_SIZE_SMALL->
+                    {
+                        Log.d("tamanho", "pequeno")
+                        lp.topMargin = -context.dip(10) + context.dip(200)
+                        lp.rightMargin = context.dip(10)
+                    }
+                }
+            }
+            2f->    //xhdpi
+            {
+
+            }
+            3f->    //xxhdpi
+            {
+
+            }
+            4f->    //xxxhdpi
+            {
+
+            }
+            else->
+            {
+
+            }
+        }
+        lp
     }
     override fun createView(ui: AnkoContext<MainActivity>) = ui.apply {
         adapterListaProdutos = ArrayAdapter(ui.ctx, R.layout.list_layout)
@@ -117,10 +180,8 @@ class MainActivityUI : AnkoComponent<MainActivity> {
             }
             addView(fab)
             val lp = LinearLayout.LayoutParams(dip(50), dip(50))
-            lp.gravity = Gravity.END
-            lp.topMargin = -dip(10) + dip(200)
-            lp.rightMargin = dip(10)
-            fab.layoutParams = lp
+            val fablp = posicionarFab(resources.displayMetrics.density,ui.ctx)
+            fab.layoutParams = fablp
             fab.scaleType = ImageView.ScaleType.CENTER
             fab.image = ui.ctx.getDrawable(R.drawable.ic_add_black_24dp)
             fab.size = FloatingActionButton.SIZE_NORMAL
@@ -131,7 +192,7 @@ class MainActivityUI : AnkoComponent<MainActivity> {
                             nomeProduto = autoCompleteTextView {
                                 setAdapter(todosProdutos)
                                 hintResource = R.string.nome_produto_hint
-                                onFocusChange { v, hasFocus ->
+                                onFocusChange { _, hasFocus ->
                                     if(!hasFocus)
                                     {
                                         unidade.text = unidadesProdutos[text.toString()]
@@ -222,8 +283,9 @@ class MainActivityUI : AnkoComponent<MainActivity> {
                             imagemVazio.visibility = View.GONE
                             textoVazio1.visibility = View.GONE
                             textoVazio2.visibility = View.GONE
-                            lp.topMargin = -dip(10)
-                            fab.layoutParams = lp
+                            val auxlp = fab.layoutParams as LinearLayout.LayoutParams
+                            auxlp.topMargin = -dip(10)
+                            fab.layoutParams = auxlp
                         }
                     }
                     noButton {  }
