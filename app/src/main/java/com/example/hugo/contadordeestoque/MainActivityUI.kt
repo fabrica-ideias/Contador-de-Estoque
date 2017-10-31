@@ -1,14 +1,11 @@
 package com.example.hugo.contadordeestoque
 
-import android.content.Context
 import android.content.Intent
-import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.provider.MediaStore
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.ActivityCompat.startActivityForResult
 import android.text.InputType
-import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.widget.*
@@ -47,66 +44,6 @@ class MainActivityUI : AnkoComponent<MainActivity> {
 
     val setProdutosUnidades = { unidades: Hashtable<String,String> ->
         this.unidadesProdutos = unidades
-    }
-
-    private val posicionarFab = { screenMetrics : Float, context: Context ->
-        val lp = LinearLayout.LayoutParams(context.dip(50), context.dip(50))
-        lp.gravity = Gravity.END
-        Log.d("metrics", screenMetrics.toString())
-        when(screenMetrics)
-        {
-            0.75f->  //ldpi
-            {
-
-            }
-            1f->    //mdpi
-            {
-
-            }
-            1.5f->  //hdpi
-            {
-                val screenSize = context.resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK
-                Log.d("screen size", screenSize.toString())
-                when(screenSize)
-                {
-                    Configuration.SCREENLAYOUT_SIZE_NORMAL->
-                    {
-                        Log.d("tamanho", "normal")
-                        lp.topMargin = -context.dip(10) + context.dip(200)
-                        lp.rightMargin = context.dip(10)
-                    }
-                    Configuration.SCREENLAYOUT_SIZE_LARGE ->
-                    {
-                        Log.d("tamanho", "grande")
-                        lp.topMargin = -context.dip(10) + context.dip(200)
-                        lp.rightMargin = context.dip(10)
-                    }
-                    Configuration.SCREENLAYOUT_SIZE_SMALL->
-                    {
-                        Log.d("tamanho", "pequeno")
-                        lp.topMargin = -context.dip(10) + context.dip(200)
-                        lp.rightMargin = context.dip(10)
-                    }
-                }
-            }
-            2f->    //xhdpi
-            {
-
-            }
-            3f->    //xxhdpi
-            {
-
-            }
-            4f->    //xxxhdpi
-            {
-
-            }
-            else->
-            {
-
-            }
-        }
-        lp
     }
     private val adicionarProdutoLista = { nome:String, quantidade: Int ->
         adapterListaProdutos.add(nome)
@@ -190,7 +127,7 @@ class MainActivityUI : AnkoComponent<MainActivity> {
                 view.layout(dip(5),dip(5),0,0)
             }
             addView(fab)
-            val fablp = posicionarFab(resources.displayMetrics.density,ui.ctx)
+            val fablp = PosicionarObjeto(fab, context, resources.displayMetrics.density).obterLayoutParams()
             fab.layoutParams = fablp
             fab.scaleType = ImageView.ScaleType.CENTER
             fab.image = ui.ctx.getDrawable(R.drawable.ic_add_black_24dp)

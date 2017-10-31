@@ -1,5 +1,6 @@
 package com.example.hugo.contadordeestoque
 
+import android.content.Context
 import android.content.SharedPreferences
 import android.support.design.widget.TextInputLayout
 import android.text.InputType
@@ -14,6 +15,9 @@ import org.jetbrains.anko.sdk25.coroutines.onClick
 class ConfigActivityUI : AnkoComponent<ConfigActivity> {
     private lateinit var prefs : SharedPreferences
     private lateinit var editor : SharedPreferences.Editor
+    private val posicionaSalvarBtn = {screenMetrics: Float, context: Context ->
+
+    }
     override fun createView(ui: AnkoContext<ConfigActivity>) = ui.apply {
         val textInput = TextInputLayout(ui.ctx)
         val textInput2 = TextInputLayout(ui.ctx)
