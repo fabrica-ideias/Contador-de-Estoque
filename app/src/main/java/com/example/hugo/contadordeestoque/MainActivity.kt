@@ -25,10 +25,8 @@ SOFTWARE.
 
 package com.example.hugo.contadordeestoque
 
-import android.app.Activity
 import android.content.Intent
 import android.content.SharedPreferences
-import android.graphics.Bitmap
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
@@ -36,7 +34,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import com.example.hugo.lessapedidos.GetScreenMetrics
-import com.google.android.gms.vision.Frame
+import com.google.zxing.integration.android.IntentIntegrator
 import com.loopj.android.http.AsyncHttpClient
 import com.loopj.android.http.JsonHttpResponseHandler
 import com.loopj.android.http.RequestParams
@@ -138,22 +136,18 @@ class MainActivity : AppCompatActivity() {
 
         }
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
         when
         {
-            requestCode == 1 && resultCode == Activity.RESULT_OK->
+            result != null ->
             {
-                val bitmap = data!!.extras["data"] as Bitmap
-                ui.setFotoTirada(bitmap)
-                val frame = Frame.Builder().setBitmap(bitmap).build()
-                val barcodes = DetectorCodigo(applicationContext).getQRCodeDetector().detect(frame)
-                try
+                if(result.contents == null)
                 {
-                    val thiscode = barcodes.valueAt(0)
-                    ui.setValorDecodificado(thiscode.rawValue)
-                }catch (e: ArrayIndexOutOfBoundsException)
+                    toast("Cancelado")
+                }
+                else
                 {
-                    e.printStackTrace()
-                    toast(R.string.codigo_erro)
+                    ui.setValorDecodificado(result.contents)
                 }
             }
         }

@@ -1,15 +1,12 @@
 package com.example.hugo.contadordeestoque
 
-import android.content.Intent
-import android.graphics.Bitmap
-import android.provider.MediaStore
 import android.support.design.widget.FloatingActionButton
-import android.support.v4.app.ActivityCompat.startActivityForResult
 import android.text.InputType
 import android.view.Gravity
 import android.view.View
 import android.widget.*
 import com.example.hugo.lessapedidos.GetScreenMetrics
+import com.google.zxing.integration.android.IntentIntegrator
 import org.jetbrains.anko.*
 import org.jetbrains.anko.sdk25.coroutines.onClick
 import org.jetbrains.anko.sdk25.coroutines.onFocusChange
@@ -26,13 +23,9 @@ class MainActivityUI : AnkoComponent<MainActivity> {
     private var unidadesProdutos = Hashtable<String,String>()
     private lateinit var adapterListaProdutos : ArrayAdapter<String>
     private lateinit var lista : ListView
-    private lateinit var fotoTirada : ImageView
     private lateinit var textoCodigo : TextView
     private lateinit var todosProdutos : ArrayAdapter<String>
     private lateinit var unidade : TextView
-    val setFotoTirada = { bitmap : Bitmap ->
-        fotoTirada.imageBitmap = bitmap
-    }
 
     val setValorDecodificado = { valor: String ->
         textoCodigo.text = valor
@@ -175,12 +168,7 @@ class MainActivityUI : AnkoComponent<MainActivity> {
                                         alert(R.string.codigo_foto){
                                             customView {
                                                 verticalLayout {
-                                                    val intentPicture = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-                                                    if(intentPicture.resolveActivity(ui.ctx.packageManager)!= null)
-                                                    {
-                                                        startActivityForResult(ui.owner, intentPicture, 1, null)
-                                                    }
-                                                    fotoTirada = imageView {}
+                                                    IntentIntegrator(ui.owner).initiateScan()
                                                     textoCodigo = textView {
                                                         textSize = GetScreenMetrics(resources.displayMetrics.density).getFontSizeDialogText()
                                                     }
